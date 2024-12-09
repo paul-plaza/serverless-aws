@@ -1,0 +1,72 @@
+service: BancaDigitalServices
+
+provider:
+  name: aws
+  runtime: dotnet8
+  profile: develop
+  region: us-east-2
+
+plugins:
+  - serverless-offline
+
+package:
+  individually: true
+
+functions:
+  verificaDatosUsuario:
+    handler: BgrDigitalServices.VerificacionDatos::BgrDigitalServices.VerificacionDatos.Function::FunctionHandler
+    package:
+      artifact: BgrDigitalServices.VerificacionDatos/src/BgrDigitalServices.VerificacionDatos/bin/release/net8.0/verificaDatosUsuario.zip
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - VerificaDatosUsuarioQueue
+              - Arn
+
+resources:
+  Resources:
+    # Crear el tópico SNS
+    VerificaDatosUsuarioTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: verifica-datos-usuario-topic
+
+    # Crear la cola SQS
+    VerificaDatosUsuarioQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: verifica-datos-usuario-queue
+
+    # Suscripción de SNS a SQS
+    VerificaDatosUsuarioQueueSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn:
+          Ref: VerificaDatosUsuarioTopic
+        Protocol: sqs
+        Endpoint:
+          Fn::GetAtt:
+            - VerificaDatosUsuarioQueue
+            - Arn
+
+    # Permisos para que SNS publique en SQS
+    VerificaDatosUsuarioQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        Queues:
+          - Ref: VerificaDatosUsuarioQueue
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal: "*"
+              Action: "SQS:SendMessage"
+              Resource:
+                Fn::GetAtt:
+                  - VerificaDatosUsuarioQueue
+                  - Arn
+              Condition:
+                ArnEquals:
+                  aws:SourceArn:
+                    Ref: VerificaDatosUsuarioTopic

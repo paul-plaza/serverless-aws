@@ -1,0 +1,17 @@
+{
+  "name": "bgrdigitalservices",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build:unix": "./build.sh",
+    "build:windows": "build.cmd",
+    "build:lambda": "if [ \"$(uname)\" = \"Linux\" ] || [ \"$(uname)\" = \"Darwin\" ]; then npm run build:unix; else npm run build:windows; fi"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "serverless-offline": "^14.3.4"
+  }
+}

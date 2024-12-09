@@ -1,0 +1,84 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aplicaciones", "aplicaciones", "{AC660CC1-E1E1-4D0A-A74D-9F955F919249}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{34E5739E-2E01-4336-B688-6194599AA478}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3542F38D-C45D-44E0-B478-2B3F1C731E4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BgrDigitalServices.VerificacionDatos", "BgrDigitalServices.VerificacionDatos\src\BgrDigitalServices.VerificacionDatos\BgrDigitalServices.VerificacionDatos.csproj", "{CC5B2E46-B38E-4F1D-BC52-AAACC9213C46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BgrDigitalServices.VerificacionDatos.Tests", "BgrDigitalServices.VerificacionDatos\test\BgrDigitalServices.VerificacionDatos.Tests\BgrDigitalServices.VerificacionDatos.Tests.csproj", "{7C4E6703-8833-47A8-A7A0-2D4A434C4098}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lambda.Tests", "Lambda.Tests", "{665DD5A0-4488-429A-A145-7A5D915C218A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{1F0ABFFE-1411-41E9-BF08-2EABD74C3B85}"
+	ProjectSection(SolutionItems) = preProject
+		serverless.yml = serverless.yml
+		package.json = package.json
+		build.sh = build.sh
+		build.cmd = build.cmd
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{623FDE73-39CA-478F-9F0D-6A13440F863A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infraestructura", "Infraestructura", "{D5136DED-A476-4403-A4EB-19FA32C59D03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BgrDigitalServices.Core", "BgrDigitalServices.Core\BgrDigitalServices.Core.csproj", "{93F5C442-B728-4AF4-ADFF-C0C9BEDF69E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BgrDigitalServices.Repository.EF", "BgrDigitalServices.Repository.EF\BgrDigitalServices.Repository.EF.csproj", "{C4A0B53C-6044-4EBD-B760-3247CB84CB9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BgrDigitalServices.AWS", "BgrDigitalServices.AWS\BgrDigitalServices.AWS.csproj", "{4A4AAD68-4A4B-4482-9785-68E7B4318BD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BgrDigital.Comun", "BgrDigital.Comun\BgrDigital.Comun.csproj", "{A1E38AA8-1E31-4E4D-9F05-867440D1AB2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BgrDigitalServices.AppTest", "BgrDigitalServices.AppTest\BgrDigitalServices.AppTest.csproj", "{0F72B422-BBAF-4857-846B-A98601FD99B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CC5B2E46-B38E-4F1D-BC52-AAACC9213C46} = {AC660CC1-E1E1-4D0A-A74D-9F955F919249}
+		{665DD5A0-4488-429A-A145-7A5D915C218A} = {3542F38D-C45D-44E0-B478-2B3F1C731E4E}
+		{7C4E6703-8833-47A8-A7A0-2D4A434C4098} = {665DD5A0-4488-429A-A145-7A5D915C218A}
+		{623FDE73-39CA-478F-9F0D-6A13440F863A} = {34E5739E-2E01-4336-B688-6194599AA478}
+		{D5136DED-A476-4403-A4EB-19FA32C59D03} = {34E5739E-2E01-4336-B688-6194599AA478}
+		{93F5C442-B728-4AF4-ADFF-C0C9BEDF69E5} = {623FDE73-39CA-478F-9F0D-6A13440F863A}
+		{C4A0B53C-6044-4EBD-B760-3247CB84CB9C} = {D5136DED-A476-4403-A4EB-19FA32C59D03}
+		{4A4AAD68-4A4B-4482-9785-68E7B4318BD3} = {D5136DED-A476-4403-A4EB-19FA32C59D03}
+		{A1E38AA8-1E31-4E4D-9F05-867440D1AB2D} = {34E5739E-2E01-4336-B688-6194599AA478}
+		{0F72B422-BBAF-4857-846B-A98601FD99B7} = {AC660CC1-E1E1-4D0A-A74D-9F955F919249}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC5B2E46-B38E-4F1D-BC52-AAACC9213C46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5B2E46-B38E-4F1D-BC52-AAACC9213C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5B2E46-B38E-4F1D-BC52-AAACC9213C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5B2E46-B38E-4F1D-BC52-AAACC9213C46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C4E6703-8833-47A8-A7A0-2D4A434C4098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C4E6703-8833-47A8-A7A0-2D4A434C4098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C4E6703-8833-47A8-A7A0-2D4A434C4098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C4E6703-8833-47A8-A7A0-2D4A434C4098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93F5C442-B728-4AF4-ADFF-C0C9BEDF69E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93F5C442-B728-4AF4-ADFF-C0C9BEDF69E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93F5C442-B728-4AF4-ADFF-C0C9BEDF69E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93F5C442-B728-4AF4-ADFF-C0C9BEDF69E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4A0B53C-6044-4EBD-B760-3247CB84CB9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4A0B53C-6044-4EBD-B760-3247CB84CB9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4A0B53C-6044-4EBD-B760-3247CB84CB9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4A0B53C-6044-4EBD-B760-3247CB84CB9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A4AAD68-4A4B-4482-9785-68E7B4318BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4AAD68-4A4B-4482-9785-68E7B4318BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4AAD68-4A4B-4482-9785-68E7B4318BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4AAD68-4A4B-4482-9785-68E7B4318BD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1E38AA8-1E31-4E4D-9F05-867440D1AB2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1E38AA8-1E31-4E4D-9F05-867440D1AB2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1E38AA8-1E31-4E4D-9F05-867440D1AB2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1E38AA8-1E31-4E4D-9F05-867440D1AB2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F72B422-BBAF-4857-846B-A98601FD99B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F72B422-BBAF-4857-846B-A98601FD99B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F72B422-BBAF-4857-846B-A98601FD99B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F72B422-BBAF-4857-846B-A98601FD99B7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

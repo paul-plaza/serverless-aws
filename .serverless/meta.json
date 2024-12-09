@@ -1,0 +1,785 @@
+{
+  "/Volumes/D/serverlessTest/bgrdigital/BgrDigitalServices": {
+    "versionSfCore": null,
+    "versionFramework": "4.4.14",
+    "isWithinCompose": false,
+    "isCompose": false,
+    "composeOrgName": null,
+    "composeResolverProviders": {
+      "default-aws-credential-resolver": "<REDACTED>",
+      "sls": {
+        "instance": {
+          "credentials": "<REDACTED>",
+          "serviceConfigFile": {
+            "service": "BancaDigitalServices",
+            "provider": {
+              "name": "aws",
+              "runtime": "dotnet8",
+              "profile": "develop",
+              "region": "us-east-2",
+              "stage": "dev",
+              "versionFunctions": true,
+              "compiledCloudFormationTemplate": {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Description": "The AWS CloudFormation template for this Serverless application",
+                "Resources": {
+                  "VerificaDatosUsuarioLogGroup": {
+                    "Type": "AWS::Logs::LogGroup",
+                    "Properties": {
+                      "LogGroupName": "/aws/lambda/BancaDigitalServices-dev-verificaDatosUsuario"
+                    }
+                  },
+                  "IamRoleLambdaExecution": {
+                    "Type": "AWS::IAM::Role",
+                    "Properties": {
+                      "AssumeRolePolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                          {
+                            "Effect": "Allow",
+                            "Principal": {
+                              "Service": [
+                                "lambda.amazonaws.com"
+                              ]
+                            },
+                            "Action": [
+                              "sts:AssumeRole"
+                            ]
+                          }
+                        ]
+                      },
+                      "Policies": [
+                        {
+                          "PolicyName": {
+                            "Fn::Join": [
+                              "-",
+                              [
+                                "BancaDigitalServices",
+                                "dev",
+                                "lambda"
+                              ]
+                            ]
+                          },
+                          "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:CreateLogStream",
+                                  "logs:CreateLogGroup",
+                                  "logs:TagResource"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/BancaDigitalServices-dev*:*"
+                                  }
+                                ]
+                              },
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:PutLogEvents"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/BancaDigitalServices-dev*:*:*"
+                                  }
+                                ]
+                              },
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "sqs:ReceiveMessage",
+                                  "sqs:DeleteMessage",
+                                  "sqs:GetQueueAttributes"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::GetAtt": [
+                                      "VerificaDatosUsuarioQueue",
+                                      "Arn"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "Path": "/",
+                      "RoleName": {
+                        "Fn::Join": [
+                          "-",
+                          [
+                            "BancaDigitalServices",
+                            "dev",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            "lambdaRole"
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  "VerificaDatosUsuarioLambdaFunction": {
+                    "Type": "AWS::Lambda::Function",
+                    "Properties": {
+                      "Code": {
+                        "S3Bucket": "serverless-framework-deployments-us-east-2-c9a70c52-53d2",
+                        "S3Key": "serverless/BancaDigitalServices/dev/1733716812173-2024-12-09T04:00:12.173Z/verificaDatosUsuario.zip"
+                      },
+                      "Handler": "BgrDigitalServices.VerificacionDatos::BgrDigitalServices.VerificacionDatos.Function::FunctionHandler",
+                      "Runtime": "dotnet8",
+                      "FunctionName": "BancaDigitalServices-dev-verificaDatosUsuario",
+                      "MemorySize": 1024,
+                      "Timeout": 6,
+                      "Role": {
+                        "Fn::GetAtt": [
+                          "IamRoleLambdaExecution",
+                          "Arn"
+                        ]
+                      }
+                    },
+                    "DependsOn": [
+                      "VerificaDatosUsuarioLogGroup"
+                    ]
+                  },
+                  "VerificaDatosUsuarioLambdaVersionr6F7DnemEWr1MG3XI4KrtNvSpiQtkP3zk0YTJ3xjeo": {
+                    "Type": "AWS::Lambda::Version",
+                    "DeletionPolicy": "Retain",
+                    "Properties": {
+                      "FunctionName": {
+                        "Ref": "VerificaDatosUsuarioLambdaFunction"
+                      },
+                      "CodeSha256": "GnF9zreB4vy6VAhwdPCBgU67TQhAf3OdSqhoXm9bIhk="
+                    }
+                  },
+                  "VerificaDatosUsuarioEventSourceMappingSQSVerificaDatosUsuarioQueue": {
+                    "Type": "AWS::Lambda::EventSourceMapping",
+                    "DependsOn": [
+                      "IamRoleLambdaExecution"
+                    ],
+                    "Properties": {
+                      "BatchSize": 10,
+                      "EventSourceArn": {
+                        "Fn::GetAtt": [
+                          "VerificaDatosUsuarioQueue",
+                          "Arn"
+                        ]
+                      },
+                      "FunctionName": {
+                        "Fn::GetAtt": [
+                          "VerificaDatosUsuarioLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "Enabled": true
+                    }
+                  },
+                  "VerificaDatosUsuarioTopic": {
+                    "Type": "AWS::SNS::Topic",
+                    "Properties": {
+                      "TopicName": "verifica-datos-usuario-topic"
+                    }
+                  },
+                  "VerificaDatosUsuarioQueue": {
+                    "Type": "AWS::SQS::Queue",
+                    "Properties": {
+                      "QueueName": "verifica-datos-usuario-queue"
+                    }
+                  },
+                  "VerificaDatosUsuarioQueueSubscription": {
+                    "Type": "AWS::SNS::Subscription",
+                    "Properties": {
+                      "TopicArn": {
+                        "Ref": "VerificaDatosUsuarioTopic"
+                      },
+                      "Protocol": "sqs",
+                      "Endpoint": {
+                        "Fn::GetAtt": [
+                          "VerificaDatosUsuarioQueue",
+                          "Arn"
+                        ]
+                      }
+                    }
+                  },
+                  "VerificaDatosUsuarioQueuePolicy": {
+                    "Type": "AWS::SQS::QueuePolicy",
+                    "Properties": {
+                      "Queues": [
+                        {
+                          "Ref": "VerificaDatosUsuarioQueue"
+                        }
+                      ],
+                      "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                          {
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "SQS:SendMessage",
+                            "Resource": {
+                              "Fn::GetAtt": [
+                                "VerificaDatosUsuarioQueue",
+                                "Arn"
+                              ]
+                            },
+                            "Condition": {
+                              "ArnEquals": {
+                                "aws:SourceArn": {
+                                  "Ref": "VerificaDatosUsuarioTopic"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "Outputs": {
+                  "ServerlessDeploymentBucketName": {
+                    "Value": "serverless-framework-deployments-us-east-2-c9a70c52-53d2",
+                    "Export": {
+                      "Name": "sls-BancaDigitalServices-dev-ServerlessDeploymentBucketName"
+                    }
+                  },
+                  "VerificaDatosUsuarioLambdaFunctionQualifiedArn": {
+                    "Description": "Current Lambda function version",
+                    "Value": {
+                      "Ref": "VerificaDatosUsuarioLambdaVersionr6F7DnemEWr1MG3XI4KrtNvSpiQtkP3zk0YTJ3xjeo"
+                    },
+                    "Export": {
+                      "Name": "sls-BancaDigitalServices-dev-VerificaDatosUsuarioLambdaFunctionQualifiedArn"
+                    }
+                  }
+                }
+              },
+              "vpc": {}
+            },
+            "plugins": [
+              "serverless-offline"
+            ],
+            "package": {
+              "individually": true,
+              "artifactsS3KeyDirname": "serverless/BancaDigitalServices/dev/code-artifacts",
+              "deploymentBucket": "serverless-framework-deployments-us-east-2-c9a70c52-53d2",
+              "artifactDirectoryName": "serverless/BancaDigitalServices/dev/1733716812173-2024-12-09T04:00:12.173Z"
+            },
+            "functions": {
+              "verificaDatosUsuario": {
+                "handler": "BgrDigitalServices.VerificacionDatos::BgrDigitalServices.VerificacionDatos.Function::FunctionHandler",
+                "package": {
+                  "artifact": "BgrDigitalServices.VerificacionDatos/src/BgrDigitalServices.VerificacionDatos/bin/release/net8.0/verificaDatosUsuario.zip"
+                },
+                "events": [
+                  {
+                    "sqs": {
+                      "arn": {
+                        "Fn::GetAtt": [
+                          "VerificaDatosUsuarioQueue",
+                          "Arn"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "name": "BancaDigitalServices-dev-verificaDatosUsuario",
+                "memory": 1024,
+                "timeout": 6,
+                "runtime": "dotnet8",
+                "vpc": {},
+                "versionLogicalId": "VerificaDatosUsuarioLambdaVersionr6F7DnemEWr1MG3XI4KrtNvSpiQtkP3zk0YTJ3xjeo"
+              }
+            },
+            "resources": {
+              "Resources": {
+                "VerificaDatosUsuarioTopic": {
+                  "Type": "AWS::SNS::Topic",
+                  "Properties": {
+                    "TopicName": "verifica-datos-usuario-topic"
+                  }
+                },
+                "VerificaDatosUsuarioQueue": {
+                  "Type": "AWS::SQS::Queue",
+                  "Properties": {
+                    "QueueName": "verifica-datos-usuario-queue"
+                  }
+                },
+                "VerificaDatosUsuarioQueueSubscription": {
+                  "Type": "AWS::SNS::Subscription",
+                  "Properties": {
+                    "TopicArn": {
+                      "Ref": "VerificaDatosUsuarioTopic"
+                    },
+                    "Protocol": "sqs",
+                    "Endpoint": {
+                      "Fn::GetAtt": [
+                        "VerificaDatosUsuarioQueue",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "VerificaDatosUsuarioQueuePolicy": {
+                  "Type": "AWS::SQS::QueuePolicy",
+                  "Properties": {
+                    "Queues": [
+                      {
+                        "Ref": "VerificaDatosUsuarioQueue"
+                      }
+                    ],
+                    "PolicyDocument": {
+                      "Version": "2012-10-17",
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Principal": "*",
+                          "Action": "SQS:SendMessage",
+                          "Resource": {
+                            "Fn::GetAtt": [
+                              "VerificaDatosUsuarioQueue",
+                              "Arn"
+                            ]
+                          },
+                          "Condition": {
+                            "ArnEquals": {
+                              "aws:SourceArn": {
+                                "Ref": "VerificaDatosUsuarioTopic"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "Outputs": {}
+            }
+          },
+          "configFileDirPath": "/Volumes/D/serverlessTest/bgrdigital/BgrDigitalServices",
+          "config": {
+            "type": "sls"
+          },
+          "options": {},
+          "stage": "dev",
+          "dashboard": null,
+          "logger": {
+            "namespace": "s:core:resolver:sls",
+            "prefix": null,
+            "prefixColor": null
+          },
+          "_credentialsPromise": "<REDACTED>"
+        },
+        "resolvers": {}
+      }
+    },
+    "composeServiceName": null,
+    "servicePath": "/Volumes/D/serverlessTest/bgrdigital/BgrDigitalServices",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "BancaDigitalServices",
+      "provider": {
+        "name": "aws",
+        "runtime": "dotnet8",
+        "profile": "develop",
+        "region": "us-east-2",
+        "stage": "dev",
+        "versionFunctions": true,
+        "compiledCloudFormationTemplate": {
+          "AWSTemplateFormatVersion": "2010-09-09",
+          "Description": "The AWS CloudFormation template for this Serverless application",
+          "Resources": {
+            "VerificaDatosUsuarioLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/BancaDigitalServices-dev-verificaDatosUsuario"
+              }
+            },
+            "IamRoleLambdaExecution": {
+              "Type": "AWS::IAM::Role",
+              "Properties": {
+                "AssumeRolePolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": {
+                        "Service": [
+                          "lambda.amazonaws.com"
+                        ]
+                      },
+                      "Action": [
+                        "sts:AssumeRole"
+                      ]
+                    }
+                  ]
+                },
+                "Policies": [
+                  {
+                    "PolicyName": {
+                      "Fn::Join": [
+                        "-",
+                        [
+                          "BancaDigitalServices",
+                          "dev",
+                          "lambda"
+                        ]
+                      ]
+                    },
+                    "PolicyDocument": {
+                      "Version": "2012-10-17",
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:CreateLogStream",
+                            "logs:CreateLogGroup",
+                            "logs:TagResource"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/BancaDigitalServices-dev*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:PutLogEvents"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/BancaDigitalServices-dev*:*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "sqs:ReceiveMessage",
+                            "sqs:DeleteMessage",
+                            "sqs:GetQueueAttributes"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::GetAtt": [
+                                "VerificaDatosUsuarioQueue",
+                                "Arn"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "Path": "/",
+                "RoleName": {
+                  "Fn::Join": [
+                    "-",
+                    [
+                      "BancaDigitalServices",
+                      "dev",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "lambdaRole"
+                    ]
+                  ]
+                }
+              }
+            },
+            "VerificaDatosUsuarioLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-2-c9a70c52-53d2",
+                  "S3Key": "serverless/BancaDigitalServices/dev/1733716812173-2024-12-09T04:00:12.173Z/verificaDatosUsuario.zip"
+                },
+                "Handler": "BgrDigitalServices.VerificacionDatos::BgrDigitalServices.VerificacionDatos.Function::FunctionHandler",
+                "Runtime": "dotnet8",
+                "FunctionName": "BancaDigitalServices-dev-verificaDatosUsuario",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "VerificaDatosUsuarioLogGroup"
+              ]
+            },
+            "VerificaDatosUsuarioLambdaVersionr6F7DnemEWr1MG3XI4KrtNvSpiQtkP3zk0YTJ3xjeo": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "VerificaDatosUsuarioLambdaFunction"
+                },
+                "CodeSha256": "GnF9zreB4vy6VAhwdPCBgU67TQhAf3OdSqhoXm9bIhk="
+              }
+            },
+            "VerificaDatosUsuarioEventSourceMappingSQSVerificaDatosUsuarioQueue": {
+              "Type": "AWS::Lambda::EventSourceMapping",
+              "DependsOn": [
+                "IamRoleLambdaExecution"
+              ],
+              "Properties": {
+                "BatchSize": 10,
+                "EventSourceArn": {
+                  "Fn::GetAtt": [
+                    "VerificaDatosUsuarioQueue",
+                    "Arn"
+                  ]
+                },
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "VerificaDatosUsuarioLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Enabled": true
+              }
+            },
+            "VerificaDatosUsuarioTopic": {
+              "Type": "AWS::SNS::Topic",
+              "Properties": {
+                "TopicName": "verifica-datos-usuario-topic"
+              }
+            },
+            "VerificaDatosUsuarioQueue": {
+              "Type": "AWS::SQS::Queue",
+              "Properties": {
+                "QueueName": "verifica-datos-usuario-queue"
+              }
+            },
+            "VerificaDatosUsuarioQueueSubscription": {
+              "Type": "AWS::SNS::Subscription",
+              "Properties": {
+                "TopicArn": {
+                  "Ref": "VerificaDatosUsuarioTopic"
+                },
+                "Protocol": "sqs",
+                "Endpoint": {
+                  "Fn::GetAtt": [
+                    "VerificaDatosUsuarioQueue",
+                    "Arn"
+                  ]
+                }
+              }
+            },
+            "VerificaDatosUsuarioQueuePolicy": {
+              "Type": "AWS::SQS::QueuePolicy",
+              "Properties": {
+                "Queues": [
+                  {
+                    "Ref": "VerificaDatosUsuarioQueue"
+                  }
+                ],
+                "PolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": "*",
+                      "Action": "SQS:SendMessage",
+                      "Resource": {
+                        "Fn::GetAtt": [
+                          "VerificaDatosUsuarioQueue",
+                          "Arn"
+                        ]
+                      },
+                      "Condition": {
+                        "ArnEquals": {
+                          "aws:SourceArn": {
+                            "Ref": "VerificaDatosUsuarioTopic"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "Outputs": {
+            "ServerlessDeploymentBucketName": {
+              "Value": "serverless-framework-deployments-us-east-2-c9a70c52-53d2",
+              "Export": {
+                "Name": "sls-BancaDigitalServices-dev-ServerlessDeploymentBucketName"
+              }
+            },
+            "VerificaDatosUsuarioLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "VerificaDatosUsuarioLambdaVersionr6F7DnemEWr1MG3XI4KrtNvSpiQtkP3zk0YTJ3xjeo"
+              },
+              "Export": {
+                "Name": "sls-BancaDigitalServices-dev-VerificaDatosUsuarioLambdaFunctionQualifiedArn"
+              }
+            }
+          }
+        },
+        "vpc": {}
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "package": {
+        "individually": true,
+        "artifactsS3KeyDirname": "serverless/BancaDigitalServices/dev/code-artifacts",
+        "deploymentBucket": "serverless-framework-deployments-us-east-2-c9a70c52-53d2",
+        "artifactDirectoryName": "serverless/BancaDigitalServices/dev/1733716812173-2024-12-09T04:00:12.173Z"
+      },
+      "functions": {
+        "verificaDatosUsuario": {
+          "handler": "BgrDigitalServices.VerificacionDatos::BgrDigitalServices.VerificacionDatos.Function::FunctionHandler",
+          "package": {
+            "artifact": "BgrDigitalServices.VerificacionDatos/src/BgrDigitalServices.VerificacionDatos/bin/release/net8.0/verificaDatosUsuario.zip"
+          },
+          "events": [
+            {
+              "sqs": {
+                "arn": {
+                  "Fn::GetAtt": [
+                    "VerificaDatosUsuarioQueue",
+                    "Arn"
+                  ]
+                }
+              }
+            }
+          ],
+          "name": "BancaDigitalServices-dev-verificaDatosUsuario",
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "dotnet8",
+          "vpc": {},
+          "versionLogicalId": "VerificaDatosUsuarioLambdaVersionr6F7DnemEWr1MG3XI4KrtNvSpiQtkP3zk0YTJ3xjeo"
+        }
+      },
+      "resources": {
+        "Resources": {
+          "VerificaDatosUsuarioTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+              "TopicName": "verifica-datos-usuario-topic"
+            }
+          },
+          "VerificaDatosUsuarioQueue": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+              "QueueName": "verifica-datos-usuario-queue"
+            }
+          },
+          "VerificaDatosUsuarioQueueSubscription": {
+            "Type": "AWS::SNS::Subscription",
+            "Properties": {
+              "TopicArn": {
+                "Ref": "VerificaDatosUsuarioTopic"
+              },
+              "Protocol": "sqs",
+              "Endpoint": {
+                "Fn::GetAtt": [
+                  "VerificaDatosUsuarioQueue",
+                  "Arn"
+                ]
+              }
+            }
+          },
+          "VerificaDatosUsuarioQueuePolicy": {
+            "Type": "AWS::SQS::QueuePolicy",
+            "Properties": {
+              "Queues": [
+                {
+                  "Ref": "VerificaDatosUsuarioQueue"
+                }
+              ],
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": "*",
+                    "Action": "SQS:SendMessage",
+                    "Resource": {
+                      "Fn::GetAtt": [
+                        "VerificaDatosUsuarioQueue",
+                        "Arn"
+                      ]
+                    },
+                    "Condition": {
+                      "ArnEquals": {
+                        "aws:SourceArn": {
+                          "Ref": "VerificaDatosUsuarioTopic"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {}
+      }
+    },
+    "serviceRawFile": "service: BancaDigitalServices\n\nprovider:\n  name: aws\n  runtime: dotnet8\n  profile: develop\n  region: us-east-2\n\nplugins:\n  - serverless-offline\n\npackage:\n  individually: true\n\nfunctions:\n  verificaDatosUsuario:\n    handler: BgrDigitalServices.VerificacionDatos::BgrDigitalServices.VerificacionDatos.Function::FunctionHandler\n    package:\n      artifact: BgrDigitalServices.VerificacionDatos/src/BgrDigitalServices.VerificacionDatos/bin/release/net8.0/verificaDatosUsuario.zip\n    events:\n      - sqs:\n          arn:\n            Fn::GetAtt:\n              - VerificaDatosUsuarioQueue\n              - Arn\n\nresources:\n  Resources:\n    # Crear el tópico SNS\n    VerificaDatosUsuarioTopic:\n      Type: AWS::SNS::Topic\n      Properties:\n        TopicName: verifica-datos-usuario-topic\n\n    # Crear la cola SQS\n    VerificaDatosUsuarioQueue:\n      Type: AWS::SQS::Queue\n      Properties:\n        QueueName: verifica-datos-usuario-queue\n\n    # Suscripción de SNS a SQS\n    VerificaDatosUsuarioQueueSubscription:\n      Type: AWS::SNS::Subscription\n      Properties:\n        TopicArn:\n          Ref: VerificaDatosUsuarioTopic\n        Protocol: sqs\n        Endpoint:\n          Fn::GetAtt:\n            - VerificaDatosUsuarioQueue\n            - Arn\n\n    # Permisos para que SNS publique en SQS\n    VerificaDatosUsuarioQueuePolicy:\n      Type: AWS::SQS::QueuePolicy\n      Properties:\n        Queues:\n          - Ref: VerificaDatosUsuarioQueue\n        PolicyDocument:\n          Version: \"2012-10-17\"\n          Statement:\n            - Effect: Allow\n              Principal: \"*\"\n              Action: \"SQS:SendMessage\"\n              Resource:\n                Fn::GetAtt:\n                  - VerificaDatosUsuarioQueue\n                  - Arn\n              Condition:\n                ArnEquals:\n                  aws:SourceArn:\n                    Ref: VerificaDatosUsuarioTopic",
+    "command": [
+      "deploy"
+    ],
+    "options": {},
+    "error": null,
+    "params": {},
+    "machineId": "77c71b3659141fa9ef07f068d1afeae5",
+    "stage": "dev",
+    "accessKeyV2": "<REDACTED>",
+    "accessKeyV1": "<REDACTED>",
+    "orgId": "af5fc832-51b4-47c3-9fc5-8c614152bed0",
+    "orgName": "bsdev",
+    "userId": "pgVm0NhgxcF2g4y2wx",
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "userName": "bsdev",
+    "subscription": null,
+    "userEmail": "jxguaytarilla@utpl.Edu.ec",
+    "serviceProviderAwsRegion": "us-east-2",
+    "serviceProviderAwsCredentials": "<REDACTED>",
+    "serviceProviderAwsAccountId": "019019187573",
+    "projectType": "traditional",
+    "versionSf": "4.4.14",
+    "serviceProviderAwsCfStackName": "BancaDigitalServices-dev",
+    "integrations": {},
+    "serviceUniqueId": "arn:aws:cloudformation:us-east-2:019019187573:stack/BancaDigitalServices-dev/1aa8a130-b5e2-11ef-b1eb-02c6fd902c15",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-2:019019187573:stack/BancaDigitalServices-dev/1aa8a130-b5e2-11ef-b1eb-02c6fd902c15",
+    "serviceProviderAwsCfStackCreated": "2024-12-09T04:00:18.730Z",
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": "CREATE_COMPLETE",
+    "serviceProviderAwsCfStackOutputs": [
+      {
+        "OutputKey": "VerificaDatosUsuarioLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-2:019019187573:function:BancaDigitalServices-dev-verificaDatosUsuario:1",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-BancaDigitalServices-dev-VerificaDatosUsuarioLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "ServerlessDeploymentBucketName",
+        "OutputValue": "serverless-framework-deployments-us-east-2-c9a70c52-53d2",
+        "ExportName": "sls-BancaDigitalServices-dev-ServerlessDeploymentBucketName"
+      }
+    ]
+  }
+}

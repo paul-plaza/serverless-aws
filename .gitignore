@@ -1,0 +1,47 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+
+# Node.js
+node_modules/      # Ignorar dependencias instaladas por npm/yarn
+npm-debug.log*     # Ignorar logs de depuración de npm
+yarn-debug.log*    # Ignorar logs de depuración de yarn
+yarn-error.log*    # Ignorar logs de errores de yarn
+.pnpm-debug.log*   # Ignorar logs de depuración de pnpm
+
+# Serverless Framework
+.serverless/       # Ignorar artefactos generados por Serverless Framework
+.webpack/          # Ignorar archivos generados por plugins de empaquetado
+.env               # Ignorar archivos de configuración de entorno
+.env.*             # Ignorar archivos específicos de entorno
+.slsignore         # Archivos de exclusión para Serverless Framework
+
+# AWS
+.aws-sam/          # Ignorar carpetas temporales de AWS SAM
+.aws/              # Configuraciones locales de AWS CLI
+
+# Archivos y carpetas generales
+.DS_Store          # Ignorar metadatos de macOS
+Thumbs.db          # Ignorar metadatos de Windows
+.idea/             # Configuración de proyectos de JetBrains
+.vscode/           # Configuración de VS Code
+*.log              # Ignorar archivos de log
+*.tmp              # Ignorar archivos temporales
+
+# .NET
+bin/               # Ignorar carpetas de compilación
+obj/               # Ignorar carpetas de objetos
+*.suo              # Configuraciones de Visual Studio
+*.user             # Configuraciones de usuario
+*.cache            # Archivos de caché
+*.pdb              # Archivos de símbolos de depuración
+*.dll              # Archivos de ensamblados generados
+*.exe              # Archivos ejecutables generados
+*.manifest         # Archivos de manifiesto generados
+
+# Otros
+*.swp              # Archivos de edición temporal de Vim
+*.bak              # Archivos de respaldo
